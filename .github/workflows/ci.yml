@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test:
+    name: Build and Test
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build CLI target
+        run: |
+          xcodebuild \
+            -project metamove.xcodeproj \
+            -target metamove_cli \
+            -configuration Debug \
+            SYMROOT="$PWD/build/Xcode/Products" \
+            OBJROOT="$PWD/build/Xcode/Intermediates" \
+            MACOSX_DEPLOYMENT_TARGET=10.13 \
+            ONLY_ACTIVE_ARCH=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
+            build
+
+      - name: Build app target without signing
+        run: |
+          xcodebuild \
+            -project metamove.xcodeproj \
+            -target metamove \
+            -configuration Debug \
+            SYMROOT="$PWD/build/Xcode/Products" \
+            OBJROOT="$PWD/build/Xcode/Intermediates" \
+            MACOSX_DEPLOYMENT_TARGET=10.13 \
+            ONLY_ACTIVE_ARCH=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
+            build

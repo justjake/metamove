@@ -29,7 +29,7 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2013 Josh Gao. All rights reserved.</string>
+	<string>Copyright © 2013 Josh Gao, © 2026 Jake Teton-Landis. All rights reserved.</string>
 	<key>NSMainNibFile</key>
 	<string>tray</string>
 	<key>NSPrincipalClass</key>

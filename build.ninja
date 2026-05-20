@@ -2,6 +2,7 @@ builddir = build
 cxx = clang++
 ar = ar
 cxxflags = -std=c++11 -stdlib=libc++ -Isrc -Os -Wall -Wextra -Wno-unused-parameter -fcolor-diagnostics 
+ldflags = -stdlib=libc++
 
 rule cxx
   command = $cxx -MMD -MT $out -MF $out.d $cxxflags -c $in -o $out
@@ -18,8 +19,19 @@ build $builddir/main.o: cxx src/cli/main.mm
 build $builddir/metamove.o: cxx src/metamove.mm
 build $builddir/window.o: cxx src/window.mm
 build $builddir/window_event_tap.o: cxx src/window_event_tap.mm
+build $builddir/worker_thread.o: cxx src/worker_thread.mm
+build $builddir/config_test.o: cxx tests/config_test.mm
 
-build metamove: link $builddir/config.o $builddir/event_tap.o $builddir/main.o $builddir/metamove.o $builddir/window.o $builddir/window_event_tap.o
-  libs = -lc++ -framework ApplicationServices -framework CoreFoundation -framework Foundation
+build metamove: link $builddir/config.o $builddir/event_tap.o $builddir/main.o $builddir/metamove.o $builddir/window.o $builddir/window_event_tap.o $builddir/worker_thread.o
+  libs = -framework ApplicationServices -framework CoreFoundation -framework Foundation
+
+build $builddir/config_test: link $builddir/config.o $builddir/config_test.o
+  libs = -framework ApplicationServices -framework CoreFoundation -framework Foundation
+
+rule run_test
+  command = $in
+  description = TEST $in
+
+build test: run_test $builddir/config_test
 
 default metamove
